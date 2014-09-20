@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace JsonVu.Json {
+    public enum ValueType {
+        String,
+        Number,
+        Boolean,
+        Undefined,
+        Null,
+        NaN,
+        Infinitiy,
+        Unknown
+    }
+}
