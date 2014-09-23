@@ -53,8 +53,8 @@ namespace JsonVu.Json {
 
         private Relaxations relax = Relaxations.AllowAll;
 
-        public JsonReader(string target, Relaxations relax = Relaxations.AllowAll)
-            : this(new StringReader(target), relax) {
+        public JsonReader(string json, Relaxations relax = Relaxations.AllowAll)
+            : this(new StringReader(json), relax) {
         }
 
         public JsonReader(TextReader reader, Relaxations relax = Relaxations.AllowAll) {
@@ -148,8 +148,8 @@ namespace JsonVu.Json {
                         result = ReadValue(state);
                         //文字列以外のプロパティは許可しない
                         if (this.Type != ValueType.String &&
-                            (relax & Relaxations.AllowNonStringPropertyName) != Relaxations.AllowNonStringPropertyName) {
-                            throw CreateException(Resources.DisallowNonStringProperty);
+                            (relax & Relaxations.AllowNonStringKeyName) != Relaxations.AllowNonStringKeyName) {
+                            throw CreateException(Resources.DisallowNonStringKey);
                         }
 
                         //値以外はプロパティのキーにできない
@@ -158,7 +158,7 @@ namespace JsonVu.Json {
                         }
 
                         PrepareTail(state);
-                        this.Token = JsonToken.PropertyName;
+                        this.Token = JsonToken.Key;
                         state.IsValue = true;
                     }
                 } else {
@@ -235,7 +235,7 @@ namespace JsonVu.Json {
                     }
                 } else {
                     if (!Skip()) {
-                        throw CreateException(Resources.ErrorNotSetPropertyValue);
+                        throw CreateException(Resources.ErrorNotSetObjectValue);
                     }
                     if (Next() != ':') {
                         throw CreateException(Resources.ErrorInvalidCharacter);
@@ -278,10 +278,10 @@ namespace JsonVu.Json {
             
             if (unquotedTailRegex.IsMatch(first.ToString())) {
                 if (state.State == State.InObject && state.IsValue) {
-                    throw CreateException(Resources.ErrorNotSetPropertyValue);
+                    throw CreateException(Resources.ErrorNotSetObjectValue);
                 }
                 if (state.State == State.InObject && !state.IsValue && first == ':') {
-                    throw CreateException(Resources.ErrorNotSetPropertyKey);
+                    throw CreateException(Resources.ErrorNotSetObjectKey);
                 }
                 throw CreateException(Resources.ErrorInvalidCharacter);
             }

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JsonVu.Json {
+    /// <summary>
+    /// JSONで利用可能な緩和内容を表します。
+    /// </summary>
     [Flags]
     public enum Relaxations {
         /// <summary>
@@ -16,9 +19,9 @@ namespace JsonVu.Json {
         /// </summary>
         AllowSingleQuoteString = 0x001,
         /// <summary>
-        /// 文字列でないプロパティ名を許可する
+        /// 文字列でないキー名を許可する
         /// </summary>
-        AllowNonStringPropertyName = 0x002,
+        AllowNonStringKeyName = 0x002,
         /// <summary>
         /// 16進数を許可する
         /// </summary>
@@ -53,7 +56,7 @@ namespace JsonVu.Json {
         /// すべて許可する
         /// </summary>
         AllowAll = AllowSingleQuoteString | 
-                   AllowNonStringPropertyName | 
+                   AllowNonStringKeyName | 
                    AllowHexNumber |
                    AllowOctalNumber |
                    AllowLeftZeroPaddingNumber |

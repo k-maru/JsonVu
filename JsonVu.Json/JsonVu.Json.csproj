@@ -42,6 +42,8 @@
     <EmbeddedResource Include="Properties\Resources.ja.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonFormatSetting.cs" />
+    <Compile Include="JsonFormatter.cs" />
     <Compile Include="JsonReader.cs" />
     <Compile Include="JsonReaderException.cs" />
     <Compile Include="JsonToken.cs" />

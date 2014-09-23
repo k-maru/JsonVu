@@ -132,8 +132,8 @@
   <data name="DisallowNaN" xml:space="preserve">
     <value>NaN is not allowed.</value>
   </data>
-  <data name="DisallowNonStringProperty" xml:space="preserve">
-    <value>Non string property name is not allowed.</value>
+  <data name="DisallowNonStringKey" xml:space="preserve">
+    <value>Non string key is not allowed.</value>
   </data>
   <data name="DisallowOctalNumber" xml:space="preserve">
     <value>Octal number is not allowed.</value>
@@ -159,10 +159,10 @@
   <data name="ErrorNotCompletedStringValue" xml:space="preserve">
     <value>An incorrect string value.</value>
   </data>
-  <data name="ErrorNotSetPropertyKey" xml:space="preserve">
-    <value>Property key has not been set.</value>
+  <data name="ErrorNotSetObjectKey" xml:space="preserve">
+    <value>Object Key has not been set.</value>
   </data>
-  <data name="ErrorNotSetPropertyValue" xml:space="preserve">
-    <value>Property value has not been set.</value>
+  <data name="ErrorNotSetObjectValue" xml:space="preserve">
+    <value>Object value has not been set.</value>
   </data>
 </root>

@@ -18,13 +18,13 @@ namespace JsonVu.Json.Tests {
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowSingleQuoteString);
         }
 
-        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "DisallowNonStringProperty")]
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "DisallowNonStringKey")]
         public void 文字列以外のプロパティ名は駄目() {
             var target = "{12345:'HOGE'}";
             var expects = new ReaderExpect[] {
                 new ReaderExpect(){Token = JsonToken.StartObject},
             };
-            ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowNonStringPropertyName);
+            ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowNonStringKeyName);
         }
         [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "DisallowHexNumber")]
         public void 数値の16進数は駄目1() {
@@ -48,7 +48,7 @@ namespace JsonVu.Json.Tests {
             var target = "{Foo:0x254}";
             var expects = new ReaderExpect[] {
                 new ReaderExpect(){Token = JsonToken.StartObject},
-                new ReaderExpect(){Token = JsonToken.PropertyName,  Type=ValueType.Unknown, Value = "Foo"}
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowHexNumber);
         }
@@ -81,7 +81,7 @@ namespace JsonVu.Json.Tests {
             var target = "{Foo:016}";
             var expects = new ReaderExpect[] {
                 new ReaderExpect(){Token = JsonToken.StartObject},
-                new ReaderExpect(){Token = JsonToken.PropertyName,  Type=ValueType.Unknown, Value = "Foo"}
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowOctalNumber);
         }
@@ -122,7 +122,7 @@ namespace JsonVu.Json.Tests {
             var target = "{Foo:009}";
             var expects = new ReaderExpect[] {
                 new ReaderExpect(){Token = JsonToken.StartObject},
-                new ReaderExpect(){Token = JsonToken.PropertyName,  Type=ValueType.Unknown, Value = "Foo"}
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLeftZeroPaddingNumber);
         }
@@ -182,9 +182,9 @@ namespace JsonVu.Json.Tests {
             var target = @"{""ABC"": 123, ""DEF"" : 456, } ";
             var expects = new[] {
                 new ReaderExpect(){Token = JsonToken.StartObject},
-                new ReaderExpect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC"},
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC"},
                 new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"},
-                new ReaderExpect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF"},
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF"},
                 new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "456"},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLastComma);

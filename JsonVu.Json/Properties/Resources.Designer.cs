@@ -107,11 +107,11 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
-        ///   Non string property name is not allowed. に類似しているローカライズされた文字列を検索します。
+        ///   Non string key is not allowed. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string DisallowNonStringProperty {
+        internal static string DisallowNonStringKey {
             get {
-                return ResourceManager.GetString("DisallowNonStringProperty", resourceCulture);
+                return ResourceManager.GetString("DisallowNonStringKey", resourceCulture);
             }
         }
         
@@ -188,20 +188,20 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
-        ///   Property key has not been set. に類似しているローカライズされた文字列を検索します。
+        ///   Object Key has not been set. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ErrorNotSetPropertyKey {
+        internal static string ErrorNotSetObjectKey {
             get {
-                return ResourceManager.GetString("ErrorNotSetPropertyKey", resourceCulture);
+                return ResourceManager.GetString("ErrorNotSetObjectKey", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Property value has not been set. に類似しているローカライズされた文字列を検索します。
+        ///   Object value has not been set. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string ErrorNotSetPropertyValue {
+        internal static string ErrorNotSetObjectValue {
             get {
-                return ResourceManager.GetString("ErrorNotSetPropertyValue", resourceCulture);
+                return ResourceManager.GetString("ErrorNotSetObjectValue", resourceCulture);
             }
         }
     }

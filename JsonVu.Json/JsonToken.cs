@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JsonVu.Json {
     public enum JsonToken {
-        PropertyName,
+        Key,
         Value,
         StartObject,
         EndObject,

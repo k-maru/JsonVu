@@ -132,8 +132,8 @@
   <data name="DisallowNaN" xml:space="preserve">
     <value>NaNは許可されません。</value>
   </data>
-  <data name="DisallowNonStringProperty" xml:space="preserve">
-    <value>文字列以外のオブジェクトのプロパティは許可されていません。</value>
+  <data name="DisallowNonStringKey" xml:space="preserve">
+    <value>文字列以外のオブジェクトのキーは許可されていません。</value>
   </data>
   <data name="DisallowOctalNumber" xml:space="preserve">
     <value>8進数は許可されていません。</value>
@@ -159,10 +159,10 @@
   <data name="ErrorNotCompletedStringValue" xml:space="preserve">
     <value>文字列が終了していません。</value>
   </data>
-  <data name="ErrorNotSetPropertyKey" xml:space="preserve">
-    <value>オブジェクトのプロパティが設定されていません。</value>
+  <data name="ErrorNotSetObjectKey" xml:space="preserve">
+    <value>オブジェクトのキーが設定されていません。</value>
   </data>
-  <data name="ErrorNotSetPropertyValue" xml:space="preserve">
+  <data name="ErrorNotSetObjectValue" xml:space="preserve">
     <value>オブジェクトの値が設定されていません。</value>
   </data>
 </root>
