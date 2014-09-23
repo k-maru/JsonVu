@@ -39,8 +39,6 @@ namespace JsonVu.Json {
         }
 
         private TextReader reader;
-        private int pos = 0;
-        private int line = 1;
         private Stack<StateModel> stateStack = new Stack<StateModel>();
         private Regex unquotedTailRegex = new Regex(@"[\""\'\r\n\,\ \}\]\:]");
         private Regex infinityRegex = new Regex(@"^[+\-]*Infinity$");
@@ -48,11 +46,16 @@ namespace JsonVu.Json {
         private Regex hexNumRegex = new Regex(@"^0x[0-9a-fA-F]+$");
         private Regex octNumRegex = new Regex(@"^0[0-7]+$");
 
+        private int readPos = -1;
+        private int readLine = 1;
+
         public JsonReader(string target)
             : this(new StringReader(target)) {
         }
 
         public JsonReader(TextReader reader) {
+            this.Position = -1;
+            this.Line = -1;
             this.reader = reader;
             this.stateStack.Push(StateModel.Start);
         }
@@ -78,7 +81,7 @@ namespace JsonVu.Json {
             }
             var result = ReadValue(state);
             //オブジェクトもしくは配列の中でない場合に、値を読み取った後で後続する何かがあった場合はエラー
-            if (Skip() && stateStack.Peek().State == State.Start) {
+            if (stateStack.Peek().State == State.Start && Skip()) {
                 throw CreateException(Resources.ErrorIncorrectValue);
             }
 
@@ -88,6 +91,10 @@ namespace JsonVu.Json {
         private bool ReadValue(StateModel state) {
 
             var ch = Next();
+
+            this.Position = readPos;
+            this.Line = readLine;
+
             var result = false;
             if (ch == '{') {
                 PushState(StateModel.InObject());
@@ -110,6 +117,10 @@ namespace JsonVu.Json {
         private bool ReadObject(StateModel state) {
             var ch = reader.Peek();
             var result = false;
+
+            this.Position = readPos + 1; //peek のため
+            this.Line = readLine;
+            
             if (state.State == State.InObject) {
                 if (!state.IsValue) {
                     if (ch == '}') {
@@ -144,6 +155,10 @@ namespace JsonVu.Json {
         private bool ReadArray(StateModel state) {
             var ch = reader.Peek();
             var result = false;
+
+            this.Position = readPos + 1; //peek のため
+            this.Line = readLine;
+
             if (state.State == State.InArray) {
                 if (ch == ']') {
                     Next();
@@ -205,29 +220,29 @@ namespace JsonVu.Json {
         }
 
         private bool ReadString(StateModel state) {
-            var isEscape = false;
+            var isEscaped = false;
             var builder = new StringBuilder();
 
             while (reader.Peek() > 0) {
                 var ch = Next();
-                if (ch == (this.Quote == QuoteType.Double ? '"' : '\'')) {
+                if (isEscaped) {
+                    isEscaped = false;
+                    builder.Append(ch);
+                } else if (ch == (this.Quote == QuoteType.Double ? '"' : '\'')) {
                     this.Value = builder.ToString();
                     this.Type = ValueType.String;
                     this.Token = JsonToken.Value;
                     return true;
                 } else if (ch == '\\') {
-                    isEscape = !isEscape;
+                    isEscaped = true;
                     builder.Append(ch);
                 } else if (ch == '\r' || ch == '\n') {
-                    if (!isEscape) {
-                        throw new Exception("終了していない文字列です。");
-                    }
-                    builder.Append(ch);
+                    throw CreateException(Resources.ErrorNotCompletedStringValue);
                 } else {
                     builder.Append(ch);
                 }
             }
-            throw new Exception("終了していない文字列です。");
+            throw CreateException(Resources.ErrorNotCompletedStringValue);
         }
 
         private bool ReadUnquoted(StateModel state, char first) {
@@ -324,16 +339,16 @@ namespace JsonVu.Json {
                     if ((char)reader.Peek() == '\n') {
                         Next();
                     }
-                    line++;
+                    readLine++;
                 } else if (ch == '\n') {
-                    line++;
+                    readLine++;
                 }
             }
         }
 
         private char Next() {
             var ch = (char)reader.Read();
-            pos++;
+            readPos++;
             return ch;
         }
 
@@ -350,7 +365,7 @@ namespace JsonVu.Json {
             this.Type = ValueType.Unknown;
             this.Quote = QuoteType.None;
 
-            return new JsonReaderException(message, pos, line);
+            return new JsonReaderException(message, readPos, readLine);
         }
 
         public string Value { get; private set; }
@@ -360,6 +375,10 @@ namespace JsonVu.Json {
         public ValueType Type { get; private set; }
 
         public QuoteType Quote { get; private set; }
+
+        public int Position { get; private set; }
+
+        public int Line { get; private set; }
 
         void IDisposable.Dispose() {
             if (reader != null) {

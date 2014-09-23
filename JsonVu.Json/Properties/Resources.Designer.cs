@@ -62,7 +62,7 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
-        ///   An incorrect value に類似しているローカライズされた文字列を検索します。
+        ///   An incorrect value. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorIncorrectValue {
             get {
@@ -71,7 +71,7 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
-        ///   Invalid character に類似しているローカライズされた文字列を検索します。
+        ///   Invalid character. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorInvalidCharacter {
             get {
@@ -80,11 +80,20 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
-        ///   Invalid object key に類似しているローカライズされた文字列を検索します。
+        ///   Invalid object key. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorInvalidObjectKey {
             get {
                 return ResourceManager.GetString("ErrorInvalidObjectKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   An incorrect string value. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ErrorNotCompletedStringValue {
+            get {
+                return ResourceManager.GetString("ErrorNotCompletedStringValue", resourceCulture);
             }
         }
         

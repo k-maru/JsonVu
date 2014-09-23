@@ -14,6 +14,12 @@ namespace JsonVu.Json.Tests {
                 new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "ABCDE"}  
             };
             Util.Check(target, expects);
+
+            target = @"""AB'CDE""";
+            expects = new[] {
+                new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "AB'CDE"}  
+            };
+            Util.Check(target, expects);
         }
 
         [TestMethod]
@@ -21,6 +27,12 @@ namespace JsonVu.Json.Tests {
             var target = @"'ABCDE'";
             var expects = new[] {
                 new Expect(){Quote = QuoteType.Single, Token = JsonToken.Value, Type = ValueType.String, Value = "ABCDE"}  
+            };
+            Util.Check(target, expects);
+
+            target = @"'AB""CDE'";
+            expects = new[] {
+                new Expect(){Quote = QuoteType.Single, Token = JsonToken.Value, Type = ValueType.String, Value = "AB\"CDE"}  
             };
             Util.Check(target, expects);
         }
@@ -179,8 +191,60 @@ namespace JsonVu.Json.Tests {
 
         [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorIncorrectValue")]
         public void 文字列の後ろにその他の値がある場合は例外() {
-            var target = @"""abcde"" abde";
+            var target = @"""abcde""abde";
             var expects = new Expect[]{};
+            Util.Check(target, expects);
+        }
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorIncorrectValue")]
+        public void 文字列の後ろにその他の値がある場合は例外2() {
+            var target = @"'abcde'abde";
+            var expects = new Expect[]{};
+            Util.Check(target, expects);
+        }
+
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorNotCompletedStringValue")]
+        public void 文字列中に改行がある場合は例外() {
+            var target = "\"abc\rabc\"";
+            var expects = new Expect[] { };
+            Util.Check(target, expects);
+        }
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorNotCompletedStringValue")]
+        public void 文字列中に改行がある場合は例外2() {
+            var target = "\"abc\nabc\"";
+            var expects = new Expect[] { };
+            Util.Check(target, expects);
+        }
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorNotCompletedStringValue")]
+        public void 文字列中に改行がある場合は例外3() {
+            var target = "\"abc\r\nabc\"";
+            var expects = new Expect[] { };
+            Util.Check(target, expects);
+        }
+
+        [TestMethod]
+        public void エスケープされている場合はOK() {
+            var target = "\"abc\\\rabc\"";
+            var expects = new Expect[] { 
+                new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\rabc"}  
+            };
+            Util.Check(target, expects);
+
+            target = "\"abc\\\nabc\"";
+            expects = new Expect[] { 
+                new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\nabc"}  
+            };
+            Util.Check(target, expects);
+
+            target = "\"abc\\\r\\\nabc\"";
+            expects = new Expect[] { 
+                new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\r\\\nabc"}  
+            };
+            Util.Check(target, expects);
+
+            target = "\"abc\\\"abc\"";
+            expects = new Expect[] { 
+                new Expect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\"abc"}  
+            };
             Util.Check(target, expects);
         }
     }

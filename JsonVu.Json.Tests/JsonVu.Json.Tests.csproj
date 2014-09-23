@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="ExpectedExceptionWithMessageAttribute.cs" />
     <Compile Include="ObjectValueTest.cs" />
+    <Compile Include="PosLineTest.cs" />
     <Compile Include="SingleValueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ArrayValueTest.cs" />

@@ -118,13 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorIncorrectValue" xml:space="preserve">
-    <value>An incorrect value</value>
+    <value>An incorrect value.</value>
   </data>
   <data name="ErrorInvalidCharacter" xml:space="preserve">
-    <value>Invalid character</value>
+    <value>Invalid character.</value>
   </data>
   <data name="ErrorInvalidObjectKey" xml:space="preserve">
-    <value>Invalid object key</value>
+    <value>Invalid object key.</value>
+  </data>
+  <data name="ErrorNotCompletedStringValue" xml:space="preserve">
+    <value>An incorrect string value.</value>
   </data>
   <data name="ErrorNotSetPropertyKey" xml:space="preserve">
     <value>Property key has not been set.</value>
