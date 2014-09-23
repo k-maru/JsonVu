@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JsonVu.Json.Tests {
-    public static class Util {
-        public static void Check(string json, Expect[] expects, Relaxations? relax = null) {
+    public static class ReaderUtil {
+        public static void Check(string json, ReaderExpect[] expects, Relaxations? relax = null) {
             var pos = 0;
             using (var reader = relax.HasValue ? new JsonReader(json, relax.Value) : new JsonReader(json)) {
                 while (reader.Read()) {
@@ -28,8 +28,8 @@ namespace JsonVu.Json.Tests {
         }
     }
 
-    public  class Expect {
-        public Expect() {
+    public  class ReaderExpect {
+        public ReaderExpect() {
             this.Value = null;
             this.Token = JsonToken.Unknown;
             this.Type = ValueType.None;
