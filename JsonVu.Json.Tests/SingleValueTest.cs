@@ -83,11 +83,20 @@ namespace JsonVu.Json.Tests {
             Util.Check(target, expects);
         }
 
+        //TODO 8進数と16進数のテスト
+        //以下の00.00は8進数扱いで Unknown が正しい
+
         [TestMethod]
         public void 小数でも先頭に0が複数続く場合は数値ではない() {
             var target = @"00.00";
             var expects = new[] {
-                new Expect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.String, Value = target}  
+                new Expect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Unknown, Value = target}  
+            };
+            Util.Check(target, expects);
+
+            target = @"09.00";
+            expects = new[] {
+                new Expect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
             };
             Util.Check(target, expects);
         }
@@ -129,10 +138,10 @@ namespace JsonVu.Json.Tests {
         }
 
         [TestMethod]
-        public void ゼロが連続する指数は不可() {
+        public void ゼロが連続する指数はnumberではない() {
             var target = @"00e-0";
             var expects = new[] {
-                new Expect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.String, Value = target}  
+                new Expect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Unknown, Value = target}  
             };
             Util.Check(target, expects);
         }

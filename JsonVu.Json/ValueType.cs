@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JsonVu.Json {
     public enum ValueType {
+        None,
         String,
         Number,
         Boolean,

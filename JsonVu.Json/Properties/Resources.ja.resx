@@ -118,48 +118,48 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DisallowHexNumber" xml:space="preserve">
-    <value>Hex number is not allowed.</value>
+    <value>16進数は許可されていません。</value>
   </data>
   <data name="DisallowInfinity" xml:space="preserve">
-    <value>Infinity is not allowed.</value>
+    <value>Infinityは許可されていません。</value>
   </data>
   <data name="DisallowLeftZeroPaddingNumber" xml:space="preserve">
-    <value>Left zero padding number is not allowed.</value>
+    <value>左0埋めの数値は許可されていません。</value>
   </data>
   <data name="DisallowNaN" xml:space="preserve">
-    <value>NaN is not allowed.</value>
+    <value>NaNは許可されません。</value>
   </data>
   <data name="DisallowNonStringProperty" xml:space="preserve">
-    <value>Non string property name is not allowed.</value>
+    <value>文字列以外のオブジェクトのプロパティは許可されていません。</value>
   </data>
   <data name="DisallowOctalNumber" xml:space="preserve">
-    <value>Octal number is not allowed.</value>
+    <value>8進数は許可されていません。</value>
   </data>
   <data name="DisallowSingleQuoteString" xml:space="preserve">
-    <value>String in single quotation marks are not allowed.</value>
+    <value>単一引用符での文字列は許可されていません。</value>
   </data>
   <data name="DisallowUndefined" xml:space="preserve">
-    <value>undefined is not allowed.</value>
+    <value>undefinedは許可されません。</value>
   </data>
   <data name="DisallowUnknownType" xml:space="preserve">
-    <value>Unknown type is not allowed.</value>
+    <value>不明な型の値は許可されません。</value>
   </data>
   <data name="ErrorIncorrectValue" xml:space="preserve">
-    <value>An incorrect value.</value>
+    <value>不明な値です。</value>
   </data>
   <data name="ErrorInvalidCharacter" xml:space="preserve">
-    <value>Invalid character.</value>
+    <value>不正な文字です。</value>
   </data>
   <data name="ErrorInvalidObjectKey" xml:space="preserve">
-    <value>Invalid object key.</value>
+    <value>不正なオブジェクトのキーです。</value>
   </data>
   <data name="ErrorNotCompletedStringValue" xml:space="preserve">
-    <value>An incorrect string value.</value>
+    <value>文字列が終了していません。</value>
   </data>
   <data name="ErrorNotSetPropertyKey" xml:space="preserve">
-    <value>Property key has not been set.</value>
+    <value>オブジェクトのプロパティが設定されていません。</value>
   </data>
   <data name="ErrorNotSetPropertyValue" xml:space="preserve">
-    <value>Property value has not been set.</value>
+    <value>オブジェクトの値が設定されていません。</value>
   </data>
 </root>

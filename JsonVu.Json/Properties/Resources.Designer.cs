@@ -62,6 +62,87 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
+        ///   Hex number is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowHexNumber {
+            get {
+                return ResourceManager.GetString("DisallowHexNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Infinity is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowInfinity {
+            get {
+                return ResourceManager.GetString("DisallowInfinity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Left zero padding number is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowLeftZeroPaddingNumber {
+            get {
+                return ResourceManager.GetString("DisallowLeftZeroPaddingNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   NaN is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowNaN {
+            get {
+                return ResourceManager.GetString("DisallowNaN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Non string property name is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowNonStringProperty {
+            get {
+                return ResourceManager.GetString("DisallowNonStringProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Octal number is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowOctalNumber {
+            get {
+                return ResourceManager.GetString("DisallowOctalNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   String in single quotation marks are not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowSingleQuoteString {
+            get {
+                return ResourceManager.GetString("DisallowSingleQuoteString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   undefined is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowUndefined {
+            get {
+                return ResourceManager.GetString("DisallowUndefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Unknown type is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowUnknownType {
+            get {
+                return ResourceManager.GetString("DisallowUnknownType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   An incorrect value. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorIncorrectValue {

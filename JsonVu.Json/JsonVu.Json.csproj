@@ -39,6 +39,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ja.resx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonReader.cs" />
@@ -51,6 +52,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="QuoteType.cs" />
+    <Compile Include="Relaxations.cs" />
     <Compile Include="ValueType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

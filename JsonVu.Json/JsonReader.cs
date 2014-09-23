@@ -41,7 +41,6 @@ namespace JsonVu.Json {
         private TextReader reader;
         private Stack<StateModel> stateStack = new Stack<StateModel>();
         private Regex unquotedTailRegex = new Regex(@"[\""\'\r\n\,\ \}\]\:]");
-        private Regex infinityRegex = new Regex(@"^[+\-]*Infinity$");
         private Regex jsonValidNumExpRegex = new Regex(@"^((0|[1-9][0-9]*)(\.[0-9]*)?|(\.[0-9]+))([eE][-+]?[0-9]+)?$");
         private Regex hexNumRegex = new Regex(@"^0x[0-9a-fA-F]+$");
         private Regex octNumRegex = new Regex(@"^0[0-7]+$");
@@ -49,21 +48,25 @@ namespace JsonVu.Json {
         private int readPos = -1;
         private int readLine = 1;
 
-        public JsonReader(string target)
-            : this(new StringReader(target)) {
+        private Relaxations relax = Relaxations.AllowAll;
+
+        public JsonReader(string target, Relaxations relax = Relaxations.AllowAll)
+            : this(new StringReader(target), relax) {
         }
 
-        public JsonReader(TextReader reader) {
+        public JsonReader(TextReader reader, Relaxations relax = Relaxations.AllowAll) {
             this.Position = -1;
             this.Line = -1;
             this.reader = reader;
+            this.relax = relax;
+
             this.stateStack.Push(StateModel.Start);
         }
 
         public bool Read() {
             this.Value = null;
             this.Token = JsonToken.Unknown;
-            this.Type = ValueType.Unknown;
+            this.Type = ValueType.None;
             this.Quote = QuoteType.None;
 
             Skip();
@@ -105,6 +108,10 @@ namespace JsonVu.Json {
                 this.Token = JsonToken.StartArray;
                 result = true;
             } else if (ch == '"' || ch == '\'') {
+                //単一引用符の文字列は許可しない
+                if (ch == '\'' && (relax & Relaxations.AllowSingleQuoteString) != Relaxations.AllowSingleQuoteString) {
+                    throw CreateException(Resources.DisallowSingleQuoteString);
+                }
                 this.Quote = ch == '"' ? QuoteType.Double : QuoteType.Single;
                 result = ReadString(state);
             } else {
@@ -131,12 +138,19 @@ namespace JsonVu.Json {
                         result = true;
                     } else {
                         result = ReadValue(state);
+
+                        //文字列以外のプロパティは許可しない
+                        if (this.Type != ValueType.String &&
+                            (relax & Relaxations.AllowNonStringPropertyName) != Relaxations.AllowNonStringPropertyName) {
+                            throw CreateException(Resources.DisallowNonStringProperty);
+                        }
+
                         //値以外はプロパティのキーにできない
                         if (this.Token != JsonToken.Value) {
                             throw CreateException(Resources.ErrorInvalidObjectKey);
                         }
+
                         PrepareTail(state);
-                        this.Type = ValueType.Unknown;
                         this.Token = JsonToken.PropertyName;
                         state.IsValue = true;
                     }
@@ -246,6 +260,7 @@ namespace JsonVu.Json {
         }
 
         private bool ReadUnquoted(StateModel state, char first) {
+            
             if (unquotedTailRegex.IsMatch(first.ToString())) {
                 if (state.State == State.InObject && state.IsValue) {
                     throw CreateException(Resources.ErrorNotSetPropertyValue);
@@ -279,19 +294,30 @@ namespace JsonVu.Json {
                 return ValueType.Null;
             }
             if (value == "undefined") {
+                if ((relax & Relaxations.AllowUndefined) != Relaxations.AllowUndefined) {
+                    throw CreateException(Resources.DisallowUndefined);
+                }
                 return ValueType.Undefined;
             }
             if (value == "NaN") {
+                if ((relax & Relaxations.AllowNaN) != Relaxations.AllowNaN) {
+                    throw CreateException(Resources.DisallowNaN);
+                }
                 return ValueType.NaN;
             }
-            if (infinityRegex.IsMatch(value)) {
+            if (value == "Infinity" || value == "-Infinity") {
+                if ((relax & Relaxations.AllowInfinity) != Relaxations.AllowInfinity) {
+                    throw CreateException(Resources.DisallowInfinity);
+                }
                 return ValueType.Infinitiy;
             }
             if (IsNumeric(value)) {
                 return ValueType.Number;
             }
-
-            return ValueType.String;
+            if ((relax & Relaxations.AllowUnknownType) != Relaxations.AllowUnknownType) {
+                throw CreateException(Resources.DisallowUnknownType);
+            }
+            return ValueType.Unknown;
         }
 
         private bool IsNumeric(string value) {
@@ -304,20 +330,32 @@ namespace JsonVu.Json {
             }
             //16進
             if (hexNumRegex.IsMatch(value)) {
+                if ((relax & Relaxations.AllowHexNumber) != Relaxations.AllowHexNumber) {
+                    throw CreateException(Resources.DisallowHexNumber);
+                }
                 return true;
             }
             //全部0
             if (value.Trim('0').Length == 0) {
+                if ((relax & Relaxations.AllowLeftZeroPaddingNumber) != Relaxations.AllowLeftZeroPaddingNumber) {
+                    throw CreateException(Resources.DisallowLeftZeroPaddingNumber);
+                }
                 return true;
             }
             //8進
             if (octNumRegex.IsMatch(value)) {
+                if ((relax & Relaxations.AllowOctalNumber) != Relaxations.AllowOctalNumber) {
+                    throw CreateException(Resources.DisallowOctalNumber);
+                }
                 return true;
             }
             //先頭0列挙の数値
             var trimZeroValue = value.TrimStart('0');
             if (trimZeroValue[0] >= 49 && trimZeroValue[0] <= 57) {
                 if (jsonValidNumExpRegex.IsMatch(trimZeroValue)) {
+                    if ((relax & Relaxations.AllowLeftZeroPaddingNumber) != Relaxations.AllowLeftZeroPaddingNumber) {
+                        throw CreateException(Resources.DisallowLeftZeroPaddingNumber);
+                    }
                     return true;
                 }
             }
@@ -362,7 +400,7 @@ namespace JsonVu.Json {
 
         private JsonReaderException CreateException(string message) {
             this.Token = JsonToken.Unknown;
-            this.Type = ValueType.Unknown;
+            this.Type = ValueType.None;
             this.Quote = QuoteType.None;
 
             return new JsonReaderException(message, readPos, readLine);

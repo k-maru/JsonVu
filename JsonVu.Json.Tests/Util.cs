@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace JsonVu.Json.Tests {
     public static class Util {
-        public static void Check(string json, Expect[] expects) {
+        public static void Check(string json, Expect[] expects, Relaxations? relax = null) {
             var pos = 0;
-            using (var reader = new JsonReader(json)) {
+            using (var reader = relax.HasValue ? new JsonReader(json, relax.Value) : new JsonReader(json)) {
                 while (reader.Read()) {
                     var expect = expects[pos++];
-                    Assert.AreEqual(expect.Value, reader.Value);
-                    Assert.AreEqual(expect.Quote, reader.Quote);
-                    Assert.AreEqual(expect.Type, reader.Type);
-                    Assert.AreEqual(expect.Token, reader.Token);
+                    Assert.AreEqual(expect.Value, reader.Value, string.Format("{0}-Value:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.Quote, reader.Quote, string.Format("{0}-Quote:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.Type, reader.Type, string.Format("{0}-Type:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.Token, reader.Token, string.Format("{0}-Token:{1}", pos, expect.AssertMessage));
 
                     if (expect.Pos.HasValue) {
-                        Assert.AreEqual(expect.Pos.Value, reader.Position);
+                        Assert.AreEqual(expect.Pos.Value, reader.Position, string.Format("{0}-Pos:{1}", pos, expect.AssertMessage));
                     }
                     if (expect.Line.HasValue) {
-                        Assert.AreEqual(expect.Line.Value, reader.Line);
+                        Assert.AreEqual(expect.Line.Value, reader.Line, string.Format("{0}-Line:{1}", pos, expect.AssertMessage));
                     }
                 }
             }
@@ -32,11 +32,13 @@ namespace JsonVu.Json.Tests {
         public Expect() {
             this.Value = null;
             this.Token = JsonToken.Unknown;
-            this.Type = ValueType.Unknown;
+            this.Type = ValueType.None;
             this.Quote = QuoteType.None;
 
             this.Pos = null;
             this.Line = null;
+
+            this.AssertMessage = null;
         }
 
         public string Value { get; set; }
@@ -49,5 +51,7 @@ namespace JsonVu.Json.Tests {
         public int? Pos { get; set; }
 
         public int? Line { get; set; }
+
+        public string AssertMessage { get; set; }
     }
 }
