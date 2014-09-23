@@ -80,6 +80,15 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
+        ///   Last comma is not allowed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisallowLastComma {
+            get {
+                return ResourceManager.GetString("DisallowLastComma", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Left zero padding number is not allowed. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string DisallowLeftZeroPaddingNumber {

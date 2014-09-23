@@ -69,5 +69,17 @@ namespace JsonVu.Json.Tests {
             };
             Util.Check(target, expects);
         }
+
+        [TestMethod]
+        public void 配列の末尾カンマ() {
+            var target = @"[""ABCD"", 123 ,  ] ";
+            var expects = new[] {
+                new Expect(){Token = JsonToken.StartArray},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.String, Quote = QuoteType.Double, Value = "ABCD"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"},
+                new Expect(){Token = JsonToken.EndArray}
+            };
+            Util.Check(target, expects);
+        }
     }
 }

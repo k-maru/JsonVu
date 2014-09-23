@@ -166,5 +166,28 @@ namespace JsonVu.Json.Tests {
             };
             Util.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowUnknownType);
         }
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "DisallowLastComma")]
+        public void 配列の末尾カンマは駄目() {
+            var target = @"[""ABCD"", 123, ] ";
+            var expects = new[] {
+                new Expect(){Token = JsonToken.StartArray},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.String, Quote = QuoteType.Double, Value = "ABCD"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"}
+            };
+            Util.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLastComma);
+        }
+
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "DisallowLastComma")]
+        public void オブジェクトの末尾カンマは駄目() {
+            var target = @"{""ABC"": 123, ""DEF"" : 456, } ";
+            var expects = new[] {
+                new Expect(){Token = JsonToken.StartObject},
+                new Expect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"},
+                new Expect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "456"},
+            };
+            Util.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLastComma);
+        }
     }
 }

@@ -123,6 +123,9 @@
   <data name="DisallowInfinity" xml:space="preserve">
     <value>Infinityは許可されていません。</value>
   </data>
+  <data name="DisallowLastComma" xml:space="preserve">
+    <value>末尾カンマは許可されていません。</value>
+  </data>
   <data name="DisallowLeftZeroPaddingNumber" xml:space="preserve">
     <value>左0埋めの数値は許可されていません。</value>
   </data>

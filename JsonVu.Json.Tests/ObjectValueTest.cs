@@ -152,5 +152,19 @@ namespace JsonVu.Json.Tests {
             };
             Util.Check(target, expects);
         }
+
+        [TestMethod]
+        public void オブジェクトの末尾カンマ() {
+            var target = @"{""ABC"": 123, ""DEF"" : 456 , } ";
+            var expects = new[] {
+                new Expect(){Token = JsonToken.StartObject},
+                new Expect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"},
+                new Expect(){Token = JsonToken.PropertyName,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF"},
+                new Expect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "456"},
+                new Expect(){Token = JsonToken.EndObject}
+            };
+            Util.Check(target, expects);
+        }
     }
 }

@@ -123,6 +123,9 @@
   <data name="DisallowInfinity" xml:space="preserve">
     <value>Infinity is not allowed.</value>
   </data>
+  <data name="DisallowLastComma" xml:space="preserve">
+    <value>Last comma is not allowed.</value>
+  </data>
   <data name="DisallowLeftZeroPaddingNumber" xml:space="preserve">
     <value>Left zero padding number is not allowed.</value>
   </data>

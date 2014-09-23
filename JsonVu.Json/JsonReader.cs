@@ -20,11 +20,14 @@ namespace JsonVu.Json {
             private StateModel(State state) {
                 this.State = state;
                 this.IsValue = false;
+                this.BeforeComma = false;
             }
 
             public State State { get; private set; }
 
             public bool IsValue { get; set; }
+            
+            public bool BeforeComma { get; set; }
 
             public static readonly StateModel Start = new StateModel(State.Start);
 
@@ -131,14 +134,18 @@ namespace JsonVu.Json {
             if (state.State == State.InObject) {
                 if (!state.IsValue) {
                     if (ch == '}') {
+                        if (state.BeforeComma && (relax & Relaxations.AllowLastComma) != Relaxations.AllowLastComma) {
+                            throw CreateException(Resources.DisallowLastComma);
+                        }
+                        state.BeforeComma = false;
                         Next();
                         PopState();
                         PrepareTail(state);
                         this.Token = JsonToken.EndObject;
                         result = true;
                     } else {
+                        state.BeforeComma = false;
                         result = ReadValue(state);
-
                         //文字列以外のプロパティは許可しない
                         if (this.Type != ValueType.String &&
                             (relax & Relaxations.AllowNonStringPropertyName) != Relaxations.AllowNonStringPropertyName) {
@@ -155,6 +162,7 @@ namespace JsonVu.Json {
                         state.IsValue = true;
                     }
                 } else {
+                    state.BeforeComma = false;
                     result = ReadValue(state);
                     if (this.Token == JsonToken.Value) {
                         PrepareTail(state);
@@ -175,12 +183,17 @@ namespace JsonVu.Json {
 
             if (state.State == State.InArray) {
                 if (ch == ']') {
+                    if (state.BeforeComma && (relax & Relaxations.AllowLastComma) != Relaxations.AllowLastComma) {
+                        throw CreateException(Resources.DisallowLastComma);
+                    }
+                    state.BeforeComma = false;
                     Next();
                     PopState();
                     PrepareTail(state);
                     this.Token = JsonToken.EndArray;
                     result = true;
                 } else {
+                    state.BeforeComma = false;
                     result = ReadValue(state);
                     if (this.Token == JsonToken.Value) {
                         PrepareTail(state);
@@ -202,6 +215,7 @@ namespace JsonVu.Json {
                 }
                 if (ch == ',') {
                     Next();
+                    state.BeforeComma = true;
                 }
                 return;
             }
@@ -217,6 +231,7 @@ namespace JsonVu.Json {
                     }
                     if (ch == ',') {
                         Next();
+                        state.BeforeComma = true;
                     }
                 } else {
                     if (!Skip()) {

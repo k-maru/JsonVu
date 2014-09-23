@@ -47,6 +47,8 @@ namespace JsonVu.Json {
         /// 不明な型の値を許可する
         /// </summary>
         AllowUnknownType = 0x100,
+
+        AllowLastComma = 0x200,
         /// <summary>
         /// すべて許可する
         /// </summary>
@@ -58,6 +60,7 @@ namespace JsonVu.Json {
                    AllowInfinity |
                    AllowUndefined |
                    AllowNaN |
-                   AllowUnknownType
+                   AllowUnknownType |
+                   AllowLastComma
     }
 }
