@@ -11,13 +11,13 @@ namespace JsonVu.Json.Tests {
         public void 二重引用符での文字列の読み込み() {
             var target = @"""ABCDE""";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "ABCDE"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "ABCDE", IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"""AB'CDE""";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "AB'CDE"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "AB'CDE", IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
         }
@@ -41,7 +41,7 @@ namespace JsonVu.Json.Tests {
         public void 整数の読み込み() {
             var target = @"12345";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
@@ -66,18 +66,18 @@ namespace JsonVu.Json.Tests {
         public void 小数の読み込み() {
             var target = @"12345.1234";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"0.1234";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
 
             target = @".1234";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
 
             ReaderUtil.Check(target, expects);
@@ -105,25 +105,25 @@ namespace JsonVu.Json.Tests {
         public void 整数の指数付の読み込み() {
             var target = @"12345e-10";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"12345E-10";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"12345e+10";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"12345e-10";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
         }
@@ -132,7 +132,7 @@ namespace JsonVu.Json.Tests {
         public void ゼロの指数は可能() {
             var target = @"0e-0";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Number, Value = target, IsStrict = true}
             };
             ReaderUtil.Check(target, expects);
         }
@@ -151,7 +151,7 @@ namespace JsonVu.Json.Tests {
         public void nullの読み込み() {
             var target = @"null";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Null, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Null, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
         }
@@ -160,13 +160,13 @@ namespace JsonVu.Json.Tests {
         public void booleanの読み込み() {
             var target = @"true";
             var expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Boolean, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Boolean, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = @"false";
             expects = new[] {
-                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Boolean, Value = target}  
+                new ReaderExpect(){Quote = QuoteType.None, Token = JsonToken.Value, Type = ValueType.Boolean, Value = target, IsStrict = true}  
             };
             ReaderUtil.Check(target, expects);
         }
@@ -201,13 +201,13 @@ namespace JsonVu.Json.Tests {
         [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorIncorrectValue")]
         public void 文字列の後ろにその他の値がある場合は例外() {
             var target = @"""abcde""abde";
-            var expects = new ReaderExpect[]{};
+            var expects = new ReaderExpect[] { };
             ReaderUtil.Check(target, expects);
         }
         [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorIncorrectValue")]
         public void 文字列の後ろにその他の値がある場合は例外2() {
             var target = @"'abcde'abde";
-            var expects = new ReaderExpect[]{};
+            var expects = new ReaderExpect[] { };
             ReaderUtil.Check(target, expects);
         }
 
@@ -234,25 +234,25 @@ namespace JsonVu.Json.Tests {
         public void エスケープされている場合はOK() {
             var target = "\"abc\\\rabc\"";
             var expects = new ReaderExpect[] { 
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\rabc"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\rabc", IsStrict=true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = "\"abc\\\nabc\"";
             expects = new ReaderExpect[] { 
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\nabc"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\nabc", IsStrict=true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = "\"abc\\\r\\\nabc\"";
             expects = new ReaderExpect[] { 
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\r\\\nabc"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\r\\\nabc", IsStrict=true}  
             };
             ReaderUtil.Check(target, expects);
 
             target = "\"abc\\\"abc\"";
             expects = new ReaderExpect[] { 
-                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\"abc"}  
+                new ReaderExpect(){Quote = QuoteType.Double, Token = JsonToken.Value, Type = ValueType.String, Value = "abc\\\"abc", IsStrict=true}  
             };
             ReaderUtil.Check(target, expects);
         }

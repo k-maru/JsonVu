@@ -67,10 +67,7 @@ namespace JsonVu.Json {
         }
 
         public bool Read() {
-            this.Value = null;
-            this.Token = JsonToken.Unknown;
-            this.Type = ValueType.None;
-            this.Quote = QuoteType.None;
+            InitInfo();
 
             Skip();
             if (reader.Peek() <= 0) {
@@ -94,6 +91,17 @@ namespace JsonVu.Json {
             return result;
         }
 
+        private void InitInfo() {
+            this.Value = null;
+            this.Token = JsonToken.Unknown;
+            this.Type = ValueType.None;
+            this.Quote = QuoteType.None;
+            this.IsStrict = true;
+            this.IsOctalNumber = false;
+            this.IsHexNumber = false;
+            this.HasLastComma = false;
+        }
+
         private bool ReadValue(StateModel state) {
 
             var ch = Next();
@@ -112,8 +120,11 @@ namespace JsonVu.Json {
                 result = true;
             } else if (ch == '"' || ch == '\'') {
                 //単一引用符の文字列は許可しない
-                if (ch == '\'' && (relax & Relaxations.AllowSingleQuoteString) != Relaxations.AllowSingleQuoteString) {
-                    throw CreateException(Resources.DisallowSingleQuoteString);
+                if (ch == '\'' ){
+                    IsStrict = false;
+                    if ((relax & Relaxations.AllowSingleQuoteString) != Relaxations.AllowSingleQuoteString) {
+                        throw CreateException(Resources.DisallowSingleQuoteString);
+                    }
                 }
                 this.Quote = ch == '"' ? QuoteType.Double : QuoteType.Single;
                 result = ReadString(state);
@@ -137,6 +148,10 @@ namespace JsonVu.Json {
                         if (state.BeforeComma && (relax & Relaxations.AllowLastComma) != Relaxations.AllowLastComma) {
                             throw CreateException(Resources.DisallowLastComma);
                         }
+                        if (state.BeforeComma) {
+                            HasLastComma = true;
+                            IsStrict = false;
+                        }
                         state.BeforeComma = false;
                         Next();
                         PopState();
@@ -147,9 +162,11 @@ namespace JsonVu.Json {
                         state.BeforeComma = false;
                         result = ReadValue(state);
                         //文字列以外のプロパティは許可しない
-                        if (this.Type != ValueType.String &&
-                            (relax & Relaxations.AllowNonStringKeyName) != Relaxations.AllowNonStringKeyName) {
-                            throw CreateException(Resources.DisallowNonStringKey);
+                        if (this.Type != ValueType.String){
+                            IsStrict = false;
+                            if ((relax & Relaxations.AllowNonStringKeyName) != Relaxations.AllowNonStringKeyName) {
+                                throw CreateException(Resources.DisallowNonStringKey);
+                            }
                         }
 
                         //値以外はプロパティのキーにできない
@@ -186,6 +203,11 @@ namespace JsonVu.Json {
                     if (state.BeforeComma && (relax & Relaxations.AllowLastComma) != Relaxations.AllowLastComma) {
                         throw CreateException(Resources.DisallowLastComma);
                     }
+                    if (state.BeforeComma) {
+                        HasLastComma = true;
+                        IsStrict = false;
+                    }
+                    
                     state.BeforeComma = false;
                     Next();
                     PopState();
@@ -302,13 +324,23 @@ namespace JsonVu.Json {
         }
 
         private ValueType JudgeUnquotedValue(string value) {
+
+            IsStrict = true;
+
             if (value == "true" || value == "false") {
                 return ValueType.Boolean;
             }
             if (value == "null") {
                 return ValueType.Null;
             }
+            if (IsNumeric(value)) {
+                return ValueType.Number;
+            }
+
+            IsStrict = false;
+
             if (value == "undefined") {
+
                 if ((relax & Relaxations.AllowUndefined) != Relaxations.AllowUndefined) {
                     throw CreateException(Resources.DisallowUndefined);
                 }
@@ -326,9 +358,7 @@ namespace JsonVu.Json {
                 }
                 return ValueType.Infinitiy;
             }
-            if (IsNumeric(value)) {
-                return ValueType.Number;
-            }
+            
             if ((relax & Relaxations.AllowUnknownType) != Relaxations.AllowUnknownType) {
                 throw CreateException(Resources.DisallowUnknownType);
             }
@@ -343,8 +373,10 @@ namespace JsonVu.Json {
             if (jsonValidNumExpRegex.IsMatch(value)) {
                 return true;
             }
+            IsStrict = false;
             //16進
             if (hexNumRegex.IsMatch(value)) {
+                IsHexNumber = true;
                 if ((relax & Relaxations.AllowHexNumber) != Relaxations.AllowHexNumber) {
                     throw CreateException(Resources.DisallowHexNumber);
                 }
@@ -359,6 +391,7 @@ namespace JsonVu.Json {
             }
             //8進
             if (octNumRegex.IsMatch(value)) {
+                IsOctalNumber = true;
                 if ((relax & Relaxations.AllowOctalNumber) != Relaxations.AllowOctalNumber) {
                     throw CreateException(Resources.DisallowOctalNumber);
                 }
@@ -414,10 +447,8 @@ namespace JsonVu.Json {
         }
 
         private JsonReaderException CreateException(string message) {
-            this.Token = JsonToken.Unknown;
-            this.Type = ValueType.None;
-            this.Quote = QuoteType.None;
-
+            InitInfo();
+            IsStrict = false;
             return new JsonReaderException(message, readPos, readLine);
         }
 
@@ -432,6 +463,16 @@ namespace JsonVu.Json {
         public int Position { get; private set; }
 
         public int Line { get; private set; }
+
+
+        public bool IsStrict { get; private set; }
+
+        public bool IsOctalNumber { get; private set; }
+
+        public bool IsHexNumber { get; private set; }
+
+        public bool HasLastComma { get; private set; }
+
 
         void IDisposable.Dispose() {
             if (reader != null) {

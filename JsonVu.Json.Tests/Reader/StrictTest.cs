@@ -22,7 +22,7 @@ namespace JsonVu.Json.Tests {
         public void 文字列以外のプロパティ名は駄目() {
             var target = "{12345:'HOGE'}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowNonStringKeyName);
         }
@@ -38,7 +38,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の16進数は駄目2() {
             var target = "{0x1F:'HOGE'}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowHexNumber);
         }
@@ -47,7 +47,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の16進数は駄目3() {
             var target = "{Foo:0x254}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
                 new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowHexNumber);
@@ -71,7 +71,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の8進数は駄目2() {
             var target = "{013:'HOGE'}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowOctalNumber);
         }
@@ -80,7 +80,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の8進数は駄目3() {
             var target = "{Foo:016}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
                 new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowOctalNumber);
@@ -90,7 +90,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の0左埋めは駄目1() {
             var target = "012";  //8進数だからOK
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.Value,  Type=ValueType.Number, Value = "012"}
+                new ReaderExpect(){Token = JsonToken.Value,  Type=ValueType.Number, Value = "012", IsOctalNumber = true}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLeftZeroPaddingNumber);
 
@@ -112,7 +112,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の0左埋めは駄目2() {
             var target = "{009:'HOGE'}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLeftZeroPaddingNumber);
         }
@@ -121,7 +121,7 @@ namespace JsonVu.Json.Tests {
         public void 数値の0左埋めは駄目3() {
             var target = "{Foo:009}";
             var expects = new ReaderExpect[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
                 new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.Unknown, Value = "Foo"}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLeftZeroPaddingNumber);
@@ -170,9 +170,9 @@ namespace JsonVu.Json.Tests {
         public void 配列の末尾カンマは駄目() {
             var target = @"[""ABCD"", 123, ] ";
             var expects = new[] {
-                new ReaderExpect(){Token = JsonToken.StartArray},
-                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.String, Quote = QuoteType.Double, Value = "ABCD"},
-                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"}
+                new ReaderExpect(){Token = JsonToken.StartArray, IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.String, Quote = QuoteType.Double, Value = "ABCD", IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123", IsStrict = true}
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLastComma);
         }
@@ -181,11 +181,11 @@ namespace JsonVu.Json.Tests {
         public void オブジェクトの末尾カンマは駄目() {
             var target = @"{""ABC"": 123, ""DEF"" : 456, } ";
             var expects = new[] {
-                new ReaderExpect(){Token = JsonToken.StartObject},
-                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC"},
-                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123"},
-                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF"},
-                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "456"},
+                new ReaderExpect(){Token = JsonToken.StartObject, IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC", IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123", IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Key,  Type=ValueType.String, Quote = QuoteType.Double, Value= "DEF", IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "456", IsStrict = true},
             };
             ReaderUtil.Check(target, expects, Relaxations.AllowAll ^ Relaxations.AllowLastComma);
         }

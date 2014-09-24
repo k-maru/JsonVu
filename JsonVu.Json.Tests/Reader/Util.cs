@@ -17,6 +17,11 @@ namespace JsonVu.Json.Tests {
                     Assert.AreEqual(expect.Type, reader.Type, string.Format("{0}-Type:{1}", pos, expect.AssertMessage));
                     Assert.AreEqual(expect.Token, reader.Token, string.Format("{0}-Token:{1}", pos, expect.AssertMessage));
 
+                    Assert.AreEqual(expect.IsStrict, reader.IsStrict, string.Format("{0}-IsStrict:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.IsHexNumber, reader.IsHexNumber, string.Format("{0}-IsHexNumber:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.IsOctalNumber, reader.IsOctalNumber, string.Format("{0}-IsOctalNumber:{1}", pos, expect.AssertMessage));
+                    Assert.AreEqual(expect.HasLastComma, reader.HasLastComma, string.Format("{0}-HasLastComma:{1}", pos, expect.AssertMessage));
+
                     if (expect.Pos.HasValue) {
                         Assert.AreEqual(expect.Pos.Value, reader.Position, string.Format("{0}-Pos:{1}", pos, expect.AssertMessage));
                     }
@@ -34,6 +39,11 @@ namespace JsonVu.Json.Tests {
             this.Token = JsonToken.Unknown;
             this.Type = ValueType.None;
             this.Quote = QuoteType.None;
+
+            this.IsStrict = false;
+            this.IsHexNumber = false;
+            this.IsOctalNumber = false;
+            this.HasLastComma = false;
 
             this.Pos = null;
             this.Line = null;
@@ -53,5 +63,13 @@ namespace JsonVu.Json.Tests {
         public int? Line { get; set; }
 
         public string AssertMessage { get; set; }
+
+        public bool IsStrict { get; set; }
+
+        public bool IsHexNumber { get; set; }
+
+        public bool IsOctalNumber { get; set; }
+
+        public bool HasLastComma { get; set; }
     }
 }
