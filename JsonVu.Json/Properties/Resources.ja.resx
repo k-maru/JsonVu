@@ -147,6 +147,9 @@
   <data name="DisallowUnknownType" xml:space="preserve">
     <value>不明な型の値は許可されません。</value>
   </data>
+  <data name="ErrorArrayNotCompleted" xml:space="preserve">
+    <value>配列が完了していません。</value>
+  </data>
   <data name="ErrorIncorrectValue" xml:space="preserve">
     <value>不明な値です。</value>
   </data>
@@ -164,5 +167,8 @@
   </data>
   <data name="ErrorNotSetObjectValue" xml:space="preserve">
     <value>オブジェクトの値が設定されていません。</value>
+  </data>
+  <data name="ErrorObjectNotCompleted" xml:space="preserve">
+    <value>オブジェクトが完了していません。</value>
   </data>
 </root>

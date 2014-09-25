@@ -147,6 +147,9 @@
   <data name="DisallowUnknownType" xml:space="preserve">
     <value>Unknown type is not allowed.</value>
   </data>
+  <data name="ErrorArrayNotCompleted" xml:space="preserve">
+    <value>Array has not been completed.</value>
+  </data>
   <data name="ErrorIncorrectValue" xml:space="preserve">
     <value>An incorrect value.</value>
   </data>
@@ -164,5 +167,8 @@
   </data>
   <data name="ErrorNotSetObjectValue" xml:space="preserve">
     <value>Object value has not been set.</value>
+  </data>
+  <data name="ErrorObjectNotCompleted" xml:space="preserve">
+    <value>Object has not been completed.</value>
   </data>
 </root>

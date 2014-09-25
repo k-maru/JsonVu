@@ -229,11 +229,11 @@ namespace JsonVu.Json {
             var state = stateStack.Peek();
             if (state.State == State.InArray) {
                 if (!Skip()) {
-                    throw new Exception("配列が完了していません。");
+                    throw CreateException(Resources.ErrorArrayNotCompleted);
                 }
                 var ch = reader.Peek();
                 if (ch != ',' && ch != ']') {
-                    throw new Exception("配列が完了していません。");
+                    throw CreateException(Resources.ErrorArrayNotCompleted);
                 }
                 if (ch == ',') {
                     Next();
@@ -245,11 +245,11 @@ namespace JsonVu.Json {
 
                 if (state.IsValue) {
                     if (!Skip()) {
-                        throw new Exception("オブジェクトが完了していません。");
+                        throw CreateException(Resources.ErrorObjectNotCompleted);
                     }
                     var ch = reader.Peek();
                     if (ch != ',' && ch != '}') {
-                        throw new Exception("オブジェクトが完了していません。");
+                        throw CreateException(Resources.ErrorObjectNotCompleted);
                     }
                     if (ch == ',') {
                         Next();
@@ -451,29 +451,16 @@ namespace JsonVu.Json {
             IsStrict = false;
             return new JsonReaderException(message, readPos, readLine);
         }
-
         public string Value { get; private set; }
-
         public JsonToken Token { get; private set; }
-
         public ValueType Type { get; private set; }
-
         public QuoteType Quote { get; private set; }
-
         public int Position { get; private set; }
-
         public int Line { get; private set; }
-
-
         public bool IsStrict { get; private set; }
-
         public bool IsOctalNumber { get; private set; }
-
         public bool IsHexNumber { get; private set; }
-
         public bool HasLastComma { get; private set; }
-
-
         void IDisposable.Dispose() {
             if (reader != null) {
                 try {

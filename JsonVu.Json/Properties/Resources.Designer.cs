@@ -152,6 +152,15 @@ namespace JsonVu.Json.Properties {
         }
         
         /// <summary>
+        ///   Array has not been completed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ErrorArrayNotCompleted {
+            get {
+                return ResourceManager.GetString("ErrorArrayNotCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   An incorrect value. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorIncorrectValue {
@@ -202,6 +211,15 @@ namespace JsonVu.Json.Properties {
         internal static string ErrorNotSetObjectValue {
             get {
                 return ResourceManager.GetString("ErrorNotSetObjectValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Object has not been completed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ErrorObjectNotCompleted {
+            get {
+                return ResourceManager.GetString("ErrorObjectNotCompleted", resourceCulture);
             }
         }
     }

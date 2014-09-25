@@ -81,5 +81,29 @@ namespace JsonVu.Json.Tests {
             };
             ReaderUtil.Check(target, expects);
         }
+
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorArrayNotCompleted")]
+        public void 完了していない配列1() {
+            var target = @"[""ABC"", 123 123]";
+            var expects = new[] {
+                new ReaderExpect(){Token = JsonToken.StartArray, IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC",IsStrict=true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123", IsStrict=true},
+            };
+
+            ReaderUtil.Check(target, expects);
+        }
+
+        [TestMethod, ExpectedExceptionWithMessage(typeof(JsonReaderException), typeof(Properties.Resources), "ErrorArrayNotCompleted")]
+        public void 完了していないオブジェクト2() {
+            var target = @"[""ABC"", 123";
+            var expects = new[] {
+                new ReaderExpect(){Token = JsonToken.StartArray, IsStrict = true},
+                new ReaderExpect(){Token = JsonToken.Value, Type=ValueType.String, Quote = QuoteType.Double, Value= "ABC",IsStrict=true},
+                new ReaderExpect(){Token = JsonToken.Value, Type = ValueType.Number, Value = "123", IsStrict=true},
+            };
+
+            ReaderUtil.Check(target, expects);
+        }      
     }
 }
